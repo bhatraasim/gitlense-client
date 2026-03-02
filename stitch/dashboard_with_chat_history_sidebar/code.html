@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#eca413",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#0a0907",
+                        "accent-dark": "#1a160f",
+                        "slate-text": "#a1a1aa",
+                        "white-text": "#f4f4f5",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1.25rem", "2xl": "1.5rem", "3xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Sophisticated Analytics Dashboard</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(234, 164, 19, 0.15);
+        }
+        .glow-primary {
+            box-shadow: 0 0 25px rgba(234, 164, 19, 0.25);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 50%, #1a160f 0%, #0a0907 100%);
+        }
+    </style></head>
+<body class="bg-background-dark font-display text-white-text min-h-screen hero-gradient">
+<input class="hidden peer" id="sidebar-toggle" type="checkbox"/><div class="max-w-5xl mx-auto flex flex-col min-h-screen">
+<!-- Header -->
+<!-- Sidebar Drawer Overlay (Hidden by default in CSS-only implementation) -->
+<div class="fixed inset-y-0 left-0 z-[60] w-72 h-full transition-transform -translate-x-full peer-checked:translate-x-0 glass border-r border-primary/20 flex flex-col shadow-2xl overflow-hidden" id="sidebar">
+<!-- Sidebar Header -->
+<div class="p-6 border-b border-primary/10 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-2xl drop-shadow-[0_0_8px_rgba(234,164,19,0.4)]">visibility</span>
+<h2 class="text-lg font-bold tracking-tight text-white-text">GitLense</h2>
+</div>
+<label class="cursor-pointer p-1 rounded-md hover:bg-primary/10 text-slate-text" for="sidebar-toggle">
+<span class="material-symbols-outlined">close</span>
+</label>
+</div>
+<!-- New Chat Button -->
+<div class="p-4">
+<button class="w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-primary/30 bg-primary/5 hover:bg-primary/10 text-primary font-semibold transition-all">
+<span class="material-symbols-outlined">add</span>
+            New Chat
+        </button>
+</div>
+<!-- Chat History List -->
+<div class="flex-1 overflow-y-auto p-2 space-y-1 custom-scrollbar">
+<p class="px-4 py-2 text-xs font-semibold text-slate-text uppercase tracking-wider">Recent History</p>
+<a class="flex items-center gap-3 p-3 rounded-lg bg-primary/10 text-primary border-l-2 border-primary" href="#">
+<span class="material-symbols-outlined text-xl">chat_bubble</span>
+<span class="text-sm truncate">Auth Service Debug</span>
+</a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-slate-text hover:bg-white/5 hover:text-white-text transition-all" href="#">
+<span class="material-symbols-outlined text-xl">chat_bubble</span>
+<span class="text-sm truncate">API Optimization</span>
+</a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-slate-text hover:bg-white/5 hover:text-white-text transition-all" href="#">
+<span class="material-symbols-outlined text-xl">chat_bubble</span>
+<span class="text-sm truncate">Refactoring Component</span>
+</a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-slate-text hover:bg-white/5 hover:text-white-text transition-all" href="#">
+<span class="material-symbols-outlined text-xl">chat_bubble</span>
+<span class="text-sm truncate">Payment Gateway</span>
+</a>
+</div>
+<!-- User Settings Footer -->
+<div class="p-4 border-t border-primary/10 space-y-2">
+<a class="flex items-center gap-3 p-2 rounded-lg text-slate-text hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 p-2 rounded-lg text-rose-500/80 hover:bg-rose-500/5 transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm">Logout</span>
+</a>
+</div>
+</div><label class="fixed inset-0 bg-background-dark/80 backdrop-blur-sm z-[55] hidden peer-checked:block transition-all" for="sidebar-toggle" id="sidebar-overlay"></label><header class="flex items-center justify-between p-4 glass border-b border-primary/10">
+<div class="flex items-center gap-3"><label class="p-2 rounded-lg hover:bg-primary/10 transition-colors cursor-pointer" for="sidebar-toggle">
+<span class="material-symbols-outlined text-primary">menu</span>
+</label>
+<h2 class="text-xl font-bold tracking-tight text-white-text" style=""><span class="material-symbols-outlined text-primary text-2xl drop-shadow-[0_0_8px_rgba(234,164,19,0.4)] mr-1.5" style="vertical-align: middle;">visibility</span>GitLense</h2></div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-primary/10 transition-colors" style="">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400" style="">notifications</span>
+</button>
+<div class="size-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User profile avatar photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7B5jdIMYDypTBJF7jmsJmqJ2gul-EcjGSu1JAPAfxXoQ5jNcoFcph81PyFFOpycjxYlBzjdRVbc23T1r6obSlupBJ1GTY3TYKYlnkZPLgltN_YyAKilHCK9Rj5JHWaak9BgBmvR9nEzIM6W4uvu6W81U37YJicyn7ml-gtYP-H8I84waAiGkqGUINEol5PL-3uax5vPDlxfPKUEKNae1IIc_2pjK94yxXuaEKs3m8od0vYMFeNnxEyI8-zi-vTJDuE0P0ktmA8gc" style=""/>
+</div>
+</div>
+</header>
+<!-- Stats Grid -->
+<main class="flex-1 overflow-y-auto flex flex-col h-[calc(100vh-64px)] relative z-10"><!-- Chat Message History -->
+<div class="flex-1 overflow-y-auto p-4 space-y-6 flex flex-col">
+<!-- AI Message -->
+<div class="flex items-start gap-3 max-w-[85%]">
+<div class="size-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-lg" style="">smart_toy</span>
+</div>
+<div class="glass p-4 rounded-2xl rounded-tl-none border border-primary/10 shadow-sm">
+<p class="text-sm leading-relaxed text-white-text/80" style="">Hello! How can I help you with your analytics and performance data today?</p>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex items-start gap-3 max-w-[85%] self-end flex-row-reverse">
+<div class="size-8 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-white text-lg" style="">person</span>
+</div>
+<div class="bg-primary text-background-dark p-4 rounded-2xl rounded-tr-none shadow-md glow-primary font-bold">
+<p class="text-sm leading-relaxed text-white-text/80" style="">Hello! How can I help you with your analytics and performance data today?</p>
+</div>
+</div>
+<!-- AI Message -->
+<div class="flex items-start gap-3 max-w-[85%]">
+<div class="size-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-lg" style="">smart_toy</span>
+</div>
+<div class="glass p-4 rounded-2xl rounded-tl-none border border-primary/10 shadow-sm">
+<p class="text-sm leading-relaxed text-white-text/80" style="">Hello! How can I help you with your analytics and performance data today?</p>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="p-4 bg-transparent backdrop-blur-md border-t border-primary/10">
+<div class="max-w-3xl mx-auto flex items-center gap-2 glass rounded-full p-1.5 border border-primary/20 shadow-inner group focus-within:ring-2 focus-within:ring-primary/30 transition-all">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors" style="">
+<span class="material-symbols-outlined" style="">attach_file</span>
+</button>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-sm px-2 text-slate-700 dark:text-slate-200 text-white-text placeholder-white-text/40" placeholder="Ask me anything..." type="text"/>
+<button class="size-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg hover:brightness-110 transition-all" style="">
+<span class="material-symbols-outlined glow-primary" style="">send</span>
+</button>
+</div>
+</div></main>
+<!-- Bottom Navigation Bar -->
+</div>
+</body></html>
