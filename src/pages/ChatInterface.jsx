@@ -2,6 +2,57 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { askQuestion } from '../services/api';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+const CodeBlock = ({ node, inline, className, children, ...props }) => {
+    const match = /language-(\w+)/.exec(className || '');
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(String(children).replace(/\n$/, ''));
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    if (!inline && match) {
+        return (
+            <div className="relative group my-4 rounded-xl overflow-hidden shadow-2xl border border-white/10">
+                <div className="flex items-center justify-between px-4 py-2 bg-[#1e1e1e] border-b border-white/5">
+                    <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">{match[1]}</span>
+                    <button
+                        onClick={handleCopy}
+                        className="flex items-center gap-1.5 px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+                        title="Copy code"
+                    >
+                        <span className="material-symbols-outlined text-[14px]">
+                            {copied ? 'check' : 'content_copy'}
+                        </span>
+                        <span className="text-xs font-sans">{copied ? 'Copied!' : 'Copy'}</span>
+                    </button>
+                </div>
+                <SyntaxHighlighter
+                    style={vscDarkPlus}
+                    language={match[1]}
+                    PreTag="div"
+                    className="!m-0 !bg-[#1e1e1e] scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent custom-scrollbar max-w-full"
+                    codeTagProps={{ className: 'font-mono text-[13px] leading-relaxed' }}
+                    {...props}
+                >
+                    {String(children).replace(/\n$/, '')}
+                </SyntaxHighlighter>
+            </div>
+        );
+    }
+
+    return (
+        <code className={`${className} bg-primary/10 text-primary px-1.5 py-0.5 rounded text-sm font-mono break-words`} {...props}>
+            {children}
+        </code>
+    );
+};
 
 const ChatInterface = () => {
     const { user, logout } = useAuth();
@@ -185,13 +236,38 @@ const ChatInterface = () => {
                             )}
 
                             {/* Message Bubble */}
-                            <div className={`p-4 rounded-2xl shadow-sm ${msg.role === 'human'
+                            <div className={`p-4 rounded-2xl shadow-sm overflow-hidden ${msg.role === 'human'
                                     ? 'bg-primary text-background-dark rounded-tr-none font-medium'
-                                    : 'glass rounded-tl-none border border-primary/10'
+                                    : 'glass rounded-tl-none border border-primary/10 flex-1 min-w-0'
                                 }`}>
-                                <p className={`text-sm leading-relaxed whitespace-pre-wrap ${msg.role === 'human' ? 'text-background-dark' : 'text-slate-300'}`}>
-                                    {msg.content}
-                                </p>
+                                {msg.role === 'human' ? (
+                                    <p className="text-sm leading-relaxed whitespace-pre-wrap text-background-dark break-words">
+                                        {msg.content}
+                                    </p>
+                                ) : (
+                                    <div className="text-sm leading-relaxed text-slate-300 markdown-body break-words">
+                                        <ReactMarkdown
+                                            remarkPlugins={[remarkGfm]}
+                                            components={{
+                                                code: CodeBlock,
+                                                p: ({ node, ...props }) => <p className="mb-4 last:mb-0 break-words" {...props} />,
+                                                ul: ({ node, ...props }) => <ul className="list-disc pl-5 mb-4 space-y-1 block" {...props} />,
+                                                ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mb-4 space-y-1 block" {...props} />,
+                                                li: ({ node, ...props }) => <li className="pl-1" {...props} />,
+                                                h1: ({ node, ...props }) => <h1 className="text-xl font-bold mb-4 mt-6 text-white" {...props} />,
+                                                h2: ({ node, ...props }) => <h2 className="text-lg font-bold mb-3 mt-5 text-white" {...props} />,
+                                                h3: ({ node, ...props }) => <h3 className="text-md font-bold mb-3 mt-4 text-white" {...props} />,
+                                                a: ({ node, ...props }) => <a className="text-primary hover:text-amber-400 hover:underline transition-colors break-all" target="_blank" rel="noopener noreferrer" {...props} />,
+                                                blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-primary/40 pl-4 py-1.5 my-4 bg-primary/5 rounded-r" {...props} />,
+                                                table: ({ node, ...props }) => <div className="overflow-x-auto mb-4 border border-white/10 rounded-lg"><table className="w-full text-left border-collapse" {...props} /></div>,
+                                                th: ({ node, ...props }) => <th className="border-b border-white/10 bg-white/5 p-3 text-slate-200 font-semibold" {...props} />,
+                                                td: ({ node, ...props }) => <td className="border-b border-white/5 p-3 text-slate-300" {...props} />
+                                            }}
+                                        >
+                                            {msg.content}
+                                        </ReactMarkdown>
+                                    </div>
+                                )}
 
                                 {/* Citations / Sources */}
                                 {msg.sources && msg.sources.length > 0 && (
