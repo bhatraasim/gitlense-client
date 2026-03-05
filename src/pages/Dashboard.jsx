@@ -176,6 +176,8 @@ const Dashboard = () => {
                                 const isReady = repo.status === 'ready';
                                 const isProcessing = ['queued', 'cloning', 'parsing', 'embedding'].includes(repo.status);
                                 const isFailed = repo.status === 'failed';
+                                const displayRepoName = repo.repo_name || (repo.repo_url ? repo.repo_url.split('/').pop() : 'Unknown Repository');
+                                const displayRepoPath = repo.repo_url ? repo.repo_url.replace('https://github.com/', '') : '';
 
                                 return (
                                     <div key={repo._id || repo.id} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 hover:bg-white/10 transition-all group shadow-xl relative overflow-hidden">
@@ -193,10 +195,10 @@ const Dashboard = () => {
                                                     <span className="material-symbols-outlined text-slate-300">folder_data</span>
                                                 </div>
                                                 <div className="truncate">
-                                                    <h3 className="font-bold text-slate-100 group-hover:text-primary transition-colors truncate" title={repo.repo_name}>
-                                                        {repo.repo_name}
+                                                    <h3 className="font-bold text-slate-100 group-hover:text-primary transition-colors truncate" title={displayRepoName}>
+                                                        {displayRepoName}
                                                     </h3>
-                                                    <p className="text-[10px] text-slate-500 truncate" title={repo.repo_url}>{repo.repo_url.replace('https://github.com/', '')}</p>
+                                                    <p className="text-[10px] text-slate-500 truncate" title={repo.repo_url}>{displayRepoPath}</p>
                                                 </div>
                                             </div>
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { askQuestion } from '../services/api';
+import { askQuestion, getChatHistory, getRepoById } from '../services/api';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -63,6 +63,9 @@ const ChatInterface = () => {
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [error, setError] = useState(null);
+    const [repoDetails, setRepoDetails] = useState(null);
+
+    const displayRepoName = repoDetails?.repo_name || (repoDetails?.repo_url ? repoDetails.repo_url.split('/').pop() : repoId);
     const messagesEndRef = useRef(null);
 
     // Sidebar state
@@ -72,14 +75,42 @@ const ChatInterface = () => {
     const [selectedSource, setSelectedSource] = useState(null);
 
     useEffect(() => {
-        // Welcome message
-        setMessages([
-            {
-                role: 'ai',
-                content: "Hello! I'm your GitLense AI assistant. Ask me anything about this repository's architecture, flow, or specific implementations."
+
+        //fetch the message history 
+
+        async function loadMessages() {
+            try {
+                // Fetch repo details first
+                if (repoId) {
+                    try {
+                        const repoData = await getRepoById(repoId);
+                        setRepoDetails(repoData);
+                    } catch (err) {
+                        console.error("Failed to load repo details:", err);
+                    }
+                }
+
+                const response = await getChatHistory(repoId);
+                const history = response.messages || response.chat_history || [];
+
+                setMessages([
+                    ...history,
+                    {
+                        role: 'ai',
+                        content: "Hello! I'm your GitLense AI assistant..."
+                    }
+                ]);
+            } catch (error) {
+                console.error("Failed to load history:", error);
             }
-        ]);
-    }, [repoId]);
+        }
+
+        if (repoId) {
+            loadMessages();
+        }
+
+
+    }, []);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -172,7 +203,7 @@ const ChatInterface = () => {
 
                     <p className="px-2 py-2 mt-4 text-xs font-semibold text-slate-text uppercase tracking-wider mb-2">Current Repository</p>
                     <div className="px-3 py-2 text-sm text-slate-300 break-words opacity-70">
-                        {repoId}
+                        {displayRepoName}
                     </div>
                 </div>
 
@@ -210,7 +241,7 @@ const ChatInterface = () => {
                     </div>
                     <div className="flex items-center gap-4">
                         <div className="text-sm text-slate-400 hidden sm:block truncate max-w-[200px] border border-white/10 px-3 py-1 rounded-full bg-white/5">
-                            {repoId}
+                            {displayRepoName}
                         </div>
                         <div className="size-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
                             <span className="material-symbols-outlined text-primary">person</span>
@@ -237,8 +268,8 @@ const ChatInterface = () => {
 
                             {/* Message Bubble */}
                             <div className={`p-4 rounded-2xl shadow-sm overflow-hidden ${msg.role === 'human'
-                                    ? 'bg-primary text-background-dark rounded-tr-none font-medium'
-                                    : 'glass rounded-tl-none border border-primary/10 flex-1 min-w-0'
+                                ? 'bg-primary text-background-dark rounded-tr-none font-medium'
+                                : 'glass rounded-tl-none border border-primary/10 flex-1 min-w-0'
                                 }`}>
                                 {msg.role === 'human' ? (
                                     <p className="text-sm leading-relaxed whitespace-pre-wrap text-background-dark break-words">

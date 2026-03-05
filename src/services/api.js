@@ -103,3 +103,27 @@ export const askQuestion = async (question, repoId, chatHistory = []) => {
   }
   return await response.json();
 };
+
+
+
+export const getChatHistory = async(repoId)=>{
+  try {
+    const response = await fetchWithAuth(`/chat/history/${repoId}`, { method: "GET" });
+    if (!response.ok) {
+        throw new Error('Failed to fetch chat history');
+    }
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+    throw new Error("failed to get chat history");
+  }
+}
+
+export const getRepoById = async (repoId) => {
+    const data = await getAllRepos();
+    const repo = data.find(r => (r._id === repoId || r.id === repoId));
+    if (!repo) {
+        throw new Error('Repository not found');
+    }
+    return repo;
+};
